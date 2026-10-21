@@ -5,14 +5,14 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.2||^8.0",
+        "php": "^7.3||^8.0||^8.1",
         "barryvdh/laravel-dompdf": "^0.8.3",
         "fakerphp/faker": "^1.14",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "hashids/hashids": "^4.1.0",
-        "laravel/framework": "^8.40",
+        "laravel/framework": "^8.83",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0"
     },
@@ -43,7 +43,10 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": false,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
