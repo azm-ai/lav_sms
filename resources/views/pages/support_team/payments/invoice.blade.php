@@ -56,7 +56,7 @@
                                      <input min="1" max="{{ $uc->balance ?: $uc->payment->amount }}" id="val-{{ Qs::hash($uc->id) }}" class="form-control" required placeholder="Pay Now" title="Pay Now" name="amt_paid" type="number">
                                  </div>
                                  <div class="col-md-5">
-                                     <button data-text="Pay" class="btn btn-danger" type="submit">Pay <i class="icon-paperplane ml-2"></i></button>
+                                     <button data-text="Pay" class="btn btn-primary" type="submit">Pay <i class="icon-paperplane ml-2"></i></button>
                                  </div>
                              </div>
                                 </form>

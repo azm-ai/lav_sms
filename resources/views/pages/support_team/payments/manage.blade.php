@@ -60,7 +60,7 @@
                             <td>{{ $s->adm_no }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <a href="#" class=" btn btn-danger" data-toggle="dropdown"> Manage Payments <i class="icon-arrow-down5"></i>
+                                    <a href="#" class=" btn btn-light" data-toggle="dropdown"> Manage Payments <i class="icon-arrow-down5"></i>
                                     </a>
                             <div class="dropdown-menu dropdown-menu-left">
                                 <a href="{{ route('payments.invoice', [Qs::hash($s->user_id)]) }}" class="dropdown-item">All Payments</a>

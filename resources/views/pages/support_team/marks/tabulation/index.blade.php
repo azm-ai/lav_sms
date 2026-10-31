@@ -116,7 +116,7 @@
                 </table>
                 {{--Print Button--}}
                 <div class="text-center mt-4">
-                    <a target="_blank" href="{{  route('marks.print_tabulation', [$exam_id, $my_class_id, $section_id]) }}" class="btn btn-danger btn-lg"><i class="icon-printer mr-2"></i> Print Tabulation Sheet</a>
+                    <a target="_blank" href="{{  route('marks.print_tabulation', [$exam_id, $my_class_id, $section_id]) }}" class="btn btn-primary btn-lg"><i class="icon-printer mr-2"></i> Print Tabulation Sheet</a>
                 </div>
             </div>
         </div>

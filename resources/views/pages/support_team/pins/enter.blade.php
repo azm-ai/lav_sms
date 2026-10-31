@@ -18,7 +18,7 @@
                         </div>
 
                         <div class="text-center mt-2">
-                            <button type="submit" class="btn btn-danger btn-lg">Submit <i class="icon-paperplane ml-2"></i></button>
+                            <button type="submit" class="btn btn-primary btn-lg">Submit <i class="icon-paperplane ml-2"></i></button>
                         </div>
 
                     </form>

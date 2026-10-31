@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header header-elements-inline bg-danger">
+            <div class="card-header header-elements-inline">
                 <h6 class="card-title font-weight-bold">AFFECTIVE TRAITS</h6>
                 {!! Qs::getPanelOptions() !!}
             </div>

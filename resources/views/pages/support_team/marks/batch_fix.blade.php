@@ -58,7 +58,7 @@
 
                     <div class="col-md-2 mt-4">
                         <div class="text-right mt-1">
-                            <button type="submit" class="btn btn-danger">Fix Errors <i class="icon-wrench2 ml-2"></i></button>
+                            <button type="submit" class="btn btn-primary">Fix Errors <i class="icon-wrench2 ml-2"></i></button>
                         </div>
                     </div>
 

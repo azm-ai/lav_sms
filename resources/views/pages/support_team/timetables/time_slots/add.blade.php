@@ -7,7 +7,7 @@
 
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header header-elements-inline bg-danger">
+            <div class="card-header header-elements-inline">
                 <h6 class="font-weight-bold card-title">Add Time Slots</h6>
                 {!! Qs::getPanelOptions() !!}
             </div>
