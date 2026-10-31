@@ -1,0 +1,387 @@
+{
+  "login": {
+    "url": "/login",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Login ID (username) or email"
+      },
+      {
+        "n": 2,
+        "label": "Password"
+      },
+      {
+        "n": 3,
+        "label": "Forgot password link"
+      },
+      {
+        "n": 4,
+        "label": "Sign in"
+      }
+    ],
+    "title": "ShaheenLMS"
+  },
+  "m-login": {
+    "url": "/login",
+    "callouts": [],
+    "title": "ShaheenLMS"
+  },
+  "sa-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      },
+      {
+        "n": 2,
+        "label": "Totals of students, teachers, admins and parents"
+      },
+      {
+        "n": 3,
+        "label": "Events calendar (template demo data, not stored in the database)"
+      },
+      {
+        "n": 4,
+        "label": "Current academic session"
+      },
+      {
+        "n": 5,
+        "label": "User menu: My profile, Account settings, Logout"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "sa-students-list": {
+    "url": "/students/list/1",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Tabs: all students in the class, or one section"
+      },
+      {
+        "n": 2,
+        "label": "Filter box: type to search the table"
+      },
+      {
+        "n": 3,
+        "label": "Export: Copy, Excel, PDF, choose columns"
+      },
+      {
+        "n": 4,
+        "label": "Row actions menu: view, edit, reset password, delete"
+      }
+    ],
+    "title": "Student Information - Nursery 1 | ShaheenLMS"
+  },
+  "sa-student-admit": {
+    "url": "/students/create",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Two steps: Personal data, then Student data"
+      },
+      {
+        "n": 2,
+        "label": "Required fields are marked with *"
+      },
+      {
+        "n": 3,
+        "label": "Next / Previous move between steps; Submit on the last step"
+      }
+    ],
+    "title": "Admit Student | ShaheenLMS"
+  },
+  "sa-classes": {
+    "url": "/classes",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Manage classes, or open \"Add Class\""
+      },
+      {
+        "n": 2,
+        "label": "Class list with class type"
+      }
+    ],
+    "title": "Manage Classes | ShaheenLMS"
+  },
+  "sa-sections": {
+    "url": "/sections",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sections are grouped by class; \"Add Section\" tab creates one"
+      }
+    ],
+    "title": "Manage Class Sections | ShaheenLMS"
+  },
+  "sa-subjects": {
+    "url": "/subjects",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Add Subject, then subjects per class with their teacher"
+      }
+    ],
+    "title": "Manage Subjects | ShaheenLMS"
+  },
+  "sa-exams": {
+    "url": "/exams",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Manage Exam list and \"Add Exam\" (name and term)"
+      }
+    ],
+    "title": "Manage Exams | ShaheenLMS"
+  },
+  "sa-grades": {
+    "url": "/grades",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Grade scale: grade name, mark range and remark"
+      }
+    ],
+    "title": "Manage Grades | ShaheenLMS"
+  },
+  "sa-marks-select": {
+    "url": "/marks",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Choose Exam, Class, Section and Subject, then \"Manage Marks\""
+      }
+    ],
+    "title": "Manage Exam Marks | ShaheenLMS"
+  },
+  "sa-tabulation": {
+    "url": "/marks/tabulation",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Choose Exam, Class and Section, then \"View Sheet\""
+      }
+    ],
+    "title": "Tabulation Sheet | ShaheenLMS"
+  },
+  "sa-marksheet-select": {
+    "url": "/marks/bulk",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Choose Class and Section to list students and open their marksheets"
+      }
+    ],
+    "title": "Select Student Marksheet | ShaheenLMS"
+  },
+  "sa-payment-create": {
+    "url": "/payments/create",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Fee title, for example \"School Fees\""
+      },
+      {
+        "n": 2,
+        "label": "Class (leave empty for all classes)"
+      },
+      {
+        "n": 3,
+        "label": "Amount (currency sign is the Nigerian Naira)"
+      }
+    ],
+    "title": "Create Payment | ShaheenLMS"
+  },
+  "sa-payments": {
+    "url": "/payments",
+    "callouts": [],
+    "title": "Manage Payments | ShaheenLMS"
+  },
+  "sa-student-payments": {
+    "url": "/payments/manage/1",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Pick a class and press Submit to generate fee records"
+      },
+      {
+        "n": 2,
+        "label": "Manage Payments: open the student invoice"
+      }
+    ],
+    "title": "Student Payments | ShaheenLMS"
+  },
+  "sa-timetables": {
+    "url": "/timetables",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Create a timetable record, then add time slots and subjects"
+      }
+    ],
+    "title": "Manage TimeTables | ShaheenLMS"
+  },
+  "sa-settings": {
+    "url": "/super_admin/settings",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "School name shown across the system"
+      },
+      {
+        "n": 2,
+        "label": "Current session: drives students, marks and fees"
+      },
+      {
+        "n": 3,
+        "label": "Lock exam: requires PINs to view results"
+      },
+      {
+        "n": 4,
+        "label": "Upload school logo"
+      }
+    ],
+    "title": "Manage System Settings | ShaheenLMS"
+  },
+  "sa-users": {
+    "url": "/users",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "\"Create New User\" or \"Manage Users\" by type"
+      },
+      {
+        "n": 2,
+        "label": "User type (an Admin is offered only teacher, parent and accountant)"
+      }
+    ],
+    "title": "Manage Users | ShaheenLMS"
+  },
+  "sa-promotion": {
+    "url": "/students/promotion",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "From class/section to class/section, then load students"
+      }
+    ],
+    "title": "Student Promotion | ShaheenLMS"
+  },
+  "sa-graduated": {
+    "url": "/students/graduated",
+    "callouts": [],
+    "title": "Graduated Students | ShaheenLMS"
+  },
+  "sa-dorms": {
+    "url": "/dorms",
+    "callouts": [],
+    "title": "Manage Dorms | ShaheenLMS"
+  },
+  "sa-my-account": {
+    "url": "/my_account",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Change Password, or Manage Profile"
+      }
+    ],
+    "title": "My Account | ShaheenLMS"
+  },
+  "sa-profile": {
+    "url": "/users/LE5an8w6OyGWmQ",
+    "callouts": [],
+    "title": "User Profile - CJ Inspired | ShaheenLMS"
+  },
+  "m-dashboard": {
+    "url": "/dashboard",
+    "callouts": [],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "m-students-list": {
+    "url": "/students/list/1",
+    "callouts": [],
+    "title": "Student Information - Nursery 1 | ShaheenLMS"
+  },
+  "admin-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "teacher-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "teacher-marks": {
+    "url": "/marks",
+    "callouts": [],
+    "title": "Manage Exam Marks | ShaheenLMS"
+  },
+  "accountant-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "accountant-payments": {
+    "url": "/payments/manage/1",
+    "callouts": [],
+    "title": "Student Payments | ShaheenLMS"
+  },
+  "student-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "student-profile": {
+    "url": "/students/LE5an8w6OyGWmQ",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Personal and class details"
+      }
+    ],
+    "title": "Student Profile - Student CJ | ShaheenLMS"
+  },
+  "student-marksheet": {
+    "url": "/marks/select_year/DjxEm1kYOLzAyK",
+    "callouts": [],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "parent-dashboard": {
+    "url": "/dashboard",
+    "callouts": [
+      {
+        "n": 1,
+        "label": "Sidebar menu: only shows modules this role may use"
+      }
+    ],
+    "title": "My Dashboard | ShaheenLMS"
+  },
+  "parent-children": {
+    "url": "/my_children",
+    "callouts": [],
+    "title": "My Children | ShaheenLMS"
+  }
+}

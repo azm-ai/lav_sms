@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ShaheenLMS Guide</title>
+<link rel="stylesheet" href="guide.css">
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="cover">
+  <div class="cover-top">
+    <img class="cover-logo" src="../../public/images/shaheen_lms_logo.svg" alt="ShaheenLMS">
+  </div>
+  <div class="cover-main">
+    <p class="cover-kicker">Owner, developer and institute manual</p>
+    <h1 class="cover-title">ShaheenLMS Guide</h1>
+    <p class="cover-sub">School and college management system: setup, architecture, security, deployment and day-to-day use for every role.</p>
+    <table class="cover-meta">
+      <tr><th>Version</th><td>1.0 (guide) · application branch <code>ui-polish</code></td></tr>
+      <tr><th>Date</th><td>{{DATE}}</td></tr>
+      <tr><th>Platform</th><td>Laravel 8.83 · PHP 8.1 · MySQL</td></tr>
+    </table>
+  </div>
+  <div class="cover-band">
+    <span>Made by <strong>TenH Tech</strong></span>
+    <span>tenhtech.com</span>
+  </div>
+</section>
+
+<!-- ============================ TOC ============================ -->
+<section class="toc-page">
+  <h2 class="toc-title">Contents</h2>
+  <nav id="toc"><!-- filled by build.mjs --></nav>
+  <div class="callout note">
+    <strong>How to read this guide.</strong> Part A is for the owner and the developer who installs, customizes and hosts ShaheenLMS. Part B is for staff at the school or college. Everything stated here was checked in the code or in the running application; anything that could not be checked is marked <em>not verified</em>.
+  </div>
+</section>
+
+<!-- ============================ PART A ============================ -->
+<section class="part-divider" data-part="Part A">
+  <p class="part-label">Part A</p>
+  <h1 class="part-title" data-toc="partA">Owner and developer guide</h1>
+  <p>What ShaheenLMS is, how it is built, how to install, customize, deploy and secure it, and what still needs work.</p>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c1">1. What ShaheenLMS is</h2>
+<p>ShaheenLMS is a web-based management system for schools and colleges. It keeps students, staff, classes, subjects, exams, marks, report cards, timetables and fees in one database, and gives each person a login that only shows what their role needs.</p>
+<p>It is built on the open-source <em>lav_sms</em> project (Laravel School Management System) and has been rebranded as ShaheenLMS with a green theme and the TenH Tech credit. It runs in any modern browser; there is no mobile app.</p>
+<div class="grid-3">
+  <div class="card-k"><h4>For the institute</h4><p>Admission, class and section setup, exam records, report cards, tabulation sheets, fee collection and receipts.</p></div>
+  <div class="card-k"><h4>For teachers</h4><p>Class lists, mark entry per subject, comments and skill ratings, marksheets and timetables.</p></div>
+  <div class="card-k"><h4>For families</h4><p>Students and parents log in to see profiles, timetables and published results.</p></div>
+</div>
+<h3>Who uses it</h3>
+<p>Six roles are active in the seeded system: <strong>Super Admin</strong>, <strong>Admin</strong>, <strong>Teacher</strong>, <strong>Accountant</strong>, <strong>Student</strong> and <strong>Parent</strong>. A seventh type, <em>Librarian</em>, appears in the code but is commented out of the user-type seeder and has no working pages.</p>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c2">2. Feature overview</h2>
+<table class="data">
+<thead><tr><th style="width:22%">Module</th><th>What it does</th><th style="width:26%">Used by</th></tr></thead>
+<tbody>
+<tr><td>Users and roles</td><td>Create staff and parent accounts, view profiles, reset passwords.</td><td>Super Admin, Admin</td></tr>
+<tr><td>Classes and sections</td><td>Classes grouped by class type (Creche, Nursery, Primary, Junior and Senior Secondary); each class has sections with a form teacher.</td><td>Super Admin, Admin</td></tr>
+<tr><td>Subjects</td><td>Subjects per class, each assigned to a teacher.</td><td>Super Admin, Admin</td></tr>
+<tr><td>Students</td><td>Two-step admission form, class lists, profiles, promotion to the next class, graduation list.</td><td>Super Admin, Admin; Teachers view lists</td></tr>
+<tr><td>Dormitories</td><td>Boarding houses that students can be assigned to.</td><td>Super Admin, Admin</td></tr>
+<tr><td>Exams and grades</td><td>Exams per term, grade scales per class type.</td><td>Super Admin, Admin</td></tr>
+<tr><td>Marks</td><td>Mark entry per exam, class, section and subject; comments and skill ratings; batch fix.</td><td>Super Admin, Admin, Teacher</td></tr>
+<tr><td>Marksheets and tabulation</td><td>Per-student report card (view and print) and a class tabulation sheet.</td><td>Staff; Students and Parents for their own</td></tr>
+<tr><td>Result PINs</td><td>Scratch-card style PINs required to see results when the exam is locked.</td><td>Super Admin (create); Students (enter)</td></tr>
+<tr><td>Timetables</td><td>Class and exam timetables built from time slots and subjects; printable.</td><td>Created by Admins; viewed by all</td></tr>
+<tr><td>Payments</td><td>Fee items per class, per-student invoices, part payments, receipts.</td><td>Super Admin, Admin, Accountant</td></tr>
+<tr><td>System settings</td><td>School name, acronym, contacts, current session, term dates, next-term fees, logo, exam lock.</td><td>Super Admin</td></tr>
+<tr><td>My account</td><td>Change own password and profile details.</td><td>Everyone</td></tr>
+<tr><td>Events calendar</td><td>Calendar on the dashboard. <span class="tag warn">Template demo events only</span></td><td>Everyone (view)</td></tr>
+</tbody>
+</table>
+<div class="callout warn"><strong>Not present.</strong> There is no noticeboard, no study-materials module and no working library. Library tables (<code>books</code>, <code>book_requests</code>) and two controllers exist, but no routes or menus point to them.</div>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c3">3. Technology stack and architecture</h2>
+<table class="data compact">
+<thead><tr><th style="width:26%">Layer</th><th>Technology (verified in code)</th></tr></thead>
+<tbody>
+<tr><td>Framework</td><td>Laravel 8.83.29 (PHP framework, MVC)</td></tr>
+<tr><td>Language</td><td>PHP; <code>composer.json</code> allows ^7.3, ^8.0, ^8.1. Tested here on PHP 8.1.34.</td></tr>
+<tr><td>Database</td><td>MySQL (via <code>pdo_mysql</code>); 29 migrations</td></tr>
+<tr><td>Views</td><td>Blade templates on the Limitless admin theme (Bootstrap 4, jQuery)</td></tr>
+<tr><td>UI plugins</td><td>DataTables, Select2, FullCalendar, PNotify, SweetAlert, bootstrap-datepicker</td></tr>
+<tr><td>PDF</td><td>barryvdh/laravel-dompdf 0.8.7 with dompdf 0.8.3 (receipts)</td></tr>
+<tr><td>File storage</td><td>Laravel <code>public</code> disk (<code>storage/app/public</code>, served through <code>public/storage</code>)</td></tr>
+<tr><td>Custom styling</td><td><code>public/assets/css/shaheenlms-theme.css</code> and <code>shaheenlms-ui.css</code></td></tr>
+</tbody>
+</table>
+<figure class="diagram">
+<svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="13">
+  <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs>
+  <rect x="10" y="130" width="150" height="100" rx="12" fill="#fff" stroke="#166534" stroke-width="2"/>
+  <text x="85" y="170" text-anchor="middle" font-weight="700" fill="#14532D">Browser</text>
+  <text x="85" y="192" text-anchor="middle" fill="#444">Staff, students,</text>
+  <text x="85" y="208" text-anchor="middle" fill="#444">parents</text>
+  <rect x="220" y="30" width="420" height="300" rx="14" fill="#F0FDF4" stroke="#16A34A" stroke-width="2"/>
+  <text x="430" y="56" text-anchor="middle" font-weight="700" fill="#14532D" font-size="15">Laravel 8 application (public/index.php)</text>
+  <g>
+    <rect x="245" y="75" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="330" y="102" text-anchor="middle">Routes (routes/web.php)</text>
+    <rect x="445" y="75" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="530" y="96" text-anchor="middle">Middleware</text><text x="530" y="112" text-anchor="middle" font-size="11" fill="#555">auth, teamSA, teamSAT…</text>
+    <rect x="245" y="140" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="330" y="167" text-anchor="middle">Controllers</text>
+    <rect x="445" y="140" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="530" y="161" text-anchor="middle">Helpers</text><text x="530" y="177" text-anchor="middle" font-size="11" fill="#555">Qs, Mk, Pay</text>
+    <rect x="245" y="205" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="330" y="232" text-anchor="middle">Repositories + Models</text>
+    <rect x="445" y="205" width="170" height="44" rx="8" fill="#fff" stroke="#86EFAC"/><text x="530" y="232" text-anchor="middle">Blade views</text>
+    <rect x="245" y="270" width="370" height="40" rx="8" fill="#fff" stroke="#86EFAC"/><text x="430" y="295" text-anchor="middle">DomPDF (receipt PDFs)</text>
+  </g>
+  <rect x="710" y="40" width="175" height="80" rx="12" fill="#fff" stroke="#166534" stroke-width="2"/>
+  <text x="797" y="74" text-anchor="middle" font-weight="700" fill="#14532D">MySQL</text><text x="797" y="94" text-anchor="middle" fill="#444">database lav_sms</text>
+  <rect x="710" y="150" width="175" height="80" rx="12" fill="#fff" stroke="#166534" stroke-width="2"/>
+  <text x="797" y="182" text-anchor="middle" font-weight="700" fill="#14532D">File storage</text><text x="797" y="202" text-anchor="middle" fill="#444">storage/app/public</text>
+  <rect x="710" y="260" width="175" height="70" rx="12" fill="#fff" stroke="#166534" stroke-width="2"/>
+  <text x="797" y="290" text-anchor="middle" font-weight="700" fill="#14532D">Static assets</text><text x="797" y="310" text-anchor="middle" fill="#444">public/assets, global_assets</text>
+  <line x1="160" y1="170" x2="218" y2="170" stroke="#166534" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="218" y1="195" x2="162" y2="195" stroke="#166534" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="189" y="160" text-anchor="middle" font-size="11" fill="#555">HTTPS</text>
+  <line x1="640" y1="90" x2="708" y2="80" stroke="#166534" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="640" y1="190" x2="708" y2="190" stroke="#166534" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="674" y="180" text-anchor="middle" font-size="11" fill="#555">photos, logo</text>
+  <path d="M160,215 C190,320 600,345 708,300" fill="none" stroke="#166534" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+</svg>
+<figcaption>System architecture. Requests pass through routes and role middleware to controllers, which use repositories and models to reach MySQL and render Blade views.</figcaption>
+</figure>
+<p>Business rules live mostly in controllers and three helper classes. <code>App\Helpers\Qs</code> holds role checks and settings, <code>Mk</code> handles marks and grades, and <code>Pay</code> handles payment years. Repositories in <code>app/Repositories</code> wrap the Eloquent models.</p>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c4">4. Project folder structure</h2>
+<figure class="diagram">
+<svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" font-family="Consolas, Menlo, monospace" font-size="13">
+  <rect x="0" y="0" width="900" height="470" rx="14" fill="#F8FAF9" stroke="#D9E7DD"/>
+  <g fill="#14532D" font-weight="700"><text x="24" y="34">lav_sms/</text></g>
+  <g fill="#222">
+    <text x="44" y="64">app/Http/Controllers/</text><text x="44" y="90">app/Http/Middleware/Custom/</text><text x="44" y="116">app/Helpers/</text><text x="44" y="142">app/Models/ · app/Repositories/</text><text x="44" y="168">app/Http/Requests/</text>
+    <text x="44" y="200">config/</text><text x="44" y="226">database/migrations/</text><text x="44" y="252">database/seeders/</text>
+    <text x="44" y="284">public/</text><text x="64" y="310">public/assets/css/</text><text x="64" y="336">public/images/</text>
+    <text x="44" y="368">resources/views/</text><text x="64" y="394">resources/views/partials/</text>
+    <text x="44" y="426">routes/web.php</text><text x="44" y="452">storage/app/public/</text>
+  </g>
+  <g font-family="Segoe UI, Arial" fill="#555">
+    <text x="380" y="64">Request handling; SupportTeam, SuperAdmin, MyParent groups</text>
+    <text x="380" y="90">Role gates: SuperAdmin, TeamSA, TeamSAT, TeamAccount, MyParent</text>
+    <text x="380" y="116">Qs (roles, settings), Mk (marks), Pay (payments)</text>
+    <text x="380" y="142">Database tables as classes, and query wrappers</text>
+    <text x="380" y="168">Form validation rules</text>
+    <text x="380" y="200">App name, database, filesystems, mail</text>
+    <text x="380" y="226">29 table definitions, plus foreign keys</text>
+    <text x="380" y="252">Demo data: classes, subjects, users, students</text>
+    <text x="380" y="284">Web root: index.php, favicon</text>
+    <text x="380" y="310">Theme CSS, including the ShaheenLMS layers</text>
+    <text x="380" y="336">ShaheenLMS logo and favicon SVGs</text>
+    <text x="380" y="368">Blade pages per role under pages/</text>
+    <text x="380" y="394">Layout pieces: menu, header, footer, includes</text>
+    <text x="380" y="426">Every URL and its middleware</text>
+    <text x="380" y="452">Uploaded photos and logo (needs storage:link)</text>
+  </g>
+</svg>
+<figcaption>The folders that matter. Never edit <code>vendor/</code> or <code>node_modules/</code>; they are installed by Composer and npm.</figcaption>
+</figure>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c5">5. Local setup, step by step</h2>
+<p>These steps match how this copy runs on Windows with XAMPP. Run commands in a terminal opened in the <code>lav_sms</code> folder.</p>
+<ol class="steps">
+<li><strong>Install the tools.</strong> XAMPP with PHP 8.1 (MySQL included), Composer, and Git.</li>
+<li><strong>Start MySQL</strong> from the XAMPP Control Panel and create an empty database named <code>lav_sms</code> in phpMyAdmin.</li>
+<li><strong>Install PHP packages:</strong> <code>composer install</code></li>
+<li><strong>Create the environment file:</strong> copy <code>.env.example</code> to <code>.env</code>, then set:
+<pre>APP_NAME=ShaheenLMS
+APP_URL=http://127.0.0.1:8000
+DB_DATABASE=lav_sms
+DB_USERNAME=root
+DB_PASSWORD=</pre></li>
+<li><strong>Generate the app key:</strong> <code>php artisan key:generate</code></li>
+<li><strong>Create tables and demo data:</strong> <code>php artisan migrate --seed</code></li>
+<li><strong>Link the upload folder:</strong> <code>php artisan storage:link</code></li>
+<li><strong>Start the app:</strong> <code>php artisan serve</code>, then open <code>http://127.0.0.1:8000</code> and sign in with a demo account (Appendix A).</li>
+</ol>
+<table class="data compact">
+<thead><tr><th style="width:38%">Error you see</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>SQLSTATE[HY000] [2002] connection refused</td><td>MySQL is not running. Start it in XAMPP, and check <code>DB_HOST</code> and <code>DB_PORT</code>.</td></tr>
+<tr><td>No application encryption key has been specified</td><td>Run <code>php artisan key:generate</code>.</td></tr>
+<tr><td>419 Page Expired on login</td><td>Session cookie mismatch. Use the same host as <code>APP_URL</code> (127.0.0.1 vs localhost) and clear cookies.</td></tr>
+<tr><td>Photos or logo do not show</td><td>Run <code>php artisan storage:link</code>.</td></tr>
+<tr><td>Class not found after pulling code</td><td><code>composer dump-autoload</code>, then <code>php artisan optimize:clear</code>.</td></tr>
+<tr><td>500 error when downloading a receipt PDF</td><td>Known issue: dompdf 0.8 fails on PHP 8.1. See chapter 11.</td></tr>
+<tr><td>"Record Not Found" when opening marks</td><td>No students are enrolled in the current session. See the FAQ.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c6">6. Database overview</h2>
+<p>The database has 29 migrations. The diagram shows the main tables and how they link; lookup tables (blood groups, states, LGAs, nationalities) and framework tables are left out for readability.</p>
+<figure class="diagram">
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="12">
+  <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#166534"/></marker></defs>
+  <g font-weight="700" font-size="13">
+    <rect x="20" y="60" width="240" height="250" rx="12" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/><text x="140" y="84" text-anchor="middle" fill="#14532D">People</text>
+    <rect x="330" y="60" width="240" height="250" rx="12" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/><text x="450" y="84" text-anchor="middle" fill="#14532D">Academic structure</text>
+    <rect x="640" y="60" width="240" height="250" rx="12" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/><text x="760" y="84" text-anchor="middle" fill="#14532D">Assessment</text>
+    <rect x="20" y="400" width="240" height="140" rx="12" fill="#FFFFFF" stroke="#16A34A" stroke-width="1.5"/><text x="140" y="424" text-anchor="middle" fill="#14532D">Finance</text>
+    <rect x="330" y="400" width="240" height="140" rx="12" fill="#FFFFFF" stroke="#16A34A" stroke-width="1.5"/><text x="450" y="424" text-anchor="middle" fill="#14532D">Timetable</text>
+    <rect x="640" y="400" width="240" height="140" rx="12" fill="#FFFFFF" stroke="#16A34A" stroke-width="1.5"/><text x="760" y="424" text-anchor="middle" fill="#14532D">System</text>
+  </g>
+  <g font-family="Consolas, Menlo, monospace" font-size="12">
+    <g fill="#fff" stroke="#BBD9C4">
+      <rect x="40" y="96" width="200" height="30" rx="6" fill="#166534" stroke="none"/><rect x="40" y="134" width="200" height="30" rx="6"/><rect x="40" y="172" width="200" height="56" rx="6"/><rect x="40" y="236" width="200" height="30" rx="6"/>
+      <rect x="350" y="96" width="200" height="30" rx="6"/><rect x="350" y="134" width="200" height="30" rx="6" fill="#DCFCE7"/><rect x="350" y="172" width="200" height="30" rx="6"/><rect x="350" y="210" width="200" height="30" rx="6"/><rect x="350" y="248" width="200" height="30" rx="6"/>
+      <rect x="660" y="96" width="200" height="30" rx="6"/><rect x="660" y="134" width="200" height="30" rx="6"/><rect x="660" y="172" width="200" height="30" rx="6" fill="#DCFCE7"/><rect x="660" y="210" width="200" height="30" rx="6"/><rect x="660" y="248" width="200" height="30" rx="6"/>
+      <rect x="40" y="436" width="200" height="30" rx="6"/><rect x="40" y="472" width="200" height="30" rx="6" fill="#DCFCE7"/><rect x="40" y="508" width="200" height="26" rx="6"/>
+      <rect x="350" y="436" width="200" height="30" rx="6"/><rect x="350" y="472" width="200" height="30" rx="6"/><rect x="350" y="508" width="200" height="26" rx="6"/>
+      <rect x="660" y="436" width="200" height="30" rx="6"/><rect x="660" y="472" width="200" height="56" rx="6"/>
+    </g>
+    <g fill="#1A1F1C">
+      <text x="140" y="116" text-anchor="middle" fill="#fff" font-weight="700">users</text>
+      <text x="140" y="154" text-anchor="middle">user_types</text>
+      <text x="140" y="192" text-anchor="middle" font-weight="700">student_records</text>
+      <text x="140" y="212" text-anchor="middle" font-family="Segoe UI, Arial" font-size="10.5" fill="#4A524D">user, class, section, parent, dorm</text>
+      <text x="140" y="256" text-anchor="middle">staff_records</text>
+      <text x="450" y="116" text-anchor="middle">class_types</text>
+      <text x="450" y="154" text-anchor="middle" font-weight="700">my_classes</text>
+      <text x="450" y="192" text-anchor="middle">sections</text>
+      <text x="450" y="230" text-anchor="middle">subjects</text>
+      <text x="450" y="268" text-anchor="middle">dorms</text>
+      <text x="760" y="116" text-anchor="middle">exams</text>
+      <text x="760" y="154" text-anchor="middle">grades</text>
+      <text x="760" y="192" text-anchor="middle" font-weight="700">marks</text>
+      <text x="760" y="230" text-anchor="middle">exam_records · skills</text>
+      <text x="760" y="268" text-anchor="middle">pins</text>
+      <text x="140" y="456" text-anchor="middle">payments</text>
+      <text x="140" y="492" text-anchor="middle" font-weight="700">payment_records</text>
+      <text x="140" y="526" text-anchor="middle">receipts</text>
+      <text x="450" y="456" text-anchor="middle">time_table_records</text>
+      <text x="450" y="492" text-anchor="middle">time_slots</text>
+      <text x="450" y="526" text-anchor="middle">time_tables</text>
+      <text x="760" y="456" text-anchor="middle">settings</text>
+      <text x="760" y="492" text-anchor="middle">promotions</text>
+      <text x="760" y="512" text-anchor="middle" font-family="Segoe UI, Arial" font-size="10.5" fill="#4A524D">student, from/to class</text>
+    </g>
+  </g>
+  <g stroke="#166534" stroke-width="1.8" fill="none" marker-end="url(#ar2)">
+    <line x1="240" y1="215" x2="348" y2="195"/>
+    <line x1="350" y1="180" x2="242" y2="118"/>
+    <line x1="660" y1="187" x2="552" y2="150"/>
+    <line x1="660" y1="150" x2="552" y2="114"/>
+    <path d="M760,96 C760,30 140,30 140,94"/>
+    <line x1="160" y1="472" x2="160" y2="312"/>
+    <line x1="230" y1="452" x2="400" y2="312"/>
+    <line x1="450" y1="436" x2="450" y2="312"/>
+    <line x1="520" y1="436" x2="700" y2="312"/>
+  </g>
+  <g font-size="10.5" fill="#14532D" font-weight="600">
+    <text x="294" y="222" text-anchor="middle" transform="rotate(-10 294 222)">class, section</text>
+    <text x="292" y="138" text-anchor="middle" transform="rotate(30 292 138)">teacher_id</text>
+    <text x="604" y="184" text-anchor="middle" transform="rotate(19 604 184)">class, subject</text>
+    <text x="604" y="125" text-anchor="middle" transform="rotate(18 604 125)">class_type_id</text>
+    <text x="450" y="44" text-anchor="middle">marks, exam_records, pins → student (users.id)</text>
+    <text x="150" y="380" text-anchor="end">student_id</text>
+    <text x="310" y="370">class</text>
+    <text x="458" y="370">class, subject</text>
+    <text x="626" y="370">exam_id</text>
+  </g>
+</svg>
+<figcaption>Simplified relationship diagram, grouped by area. Arrows point from a table to the table it references. A student is a <code>users</code> row plus a <code>student_records</code> row that ties them to a class, section, parent and session.</figcaption>
+</figure>
+<table class="data compact">
+<thead><tr><th style="width:26%">Table</th><th>Holds</th></tr></thead>
+<tbody>
+<tr><td>users</td><td>Every account. <code>user_type</code> is the role; <code>code</code> is a unique hash used in URLs.</td></tr>
+<tr><td>student_records</td><td>Admission number, class, section, parent, dorm, session, graduation flag.</td></tr>
+<tr><td>staff_records</td><td>Employment date and code for staff.</td></tr>
+<tr><td>marks, exam_records</td><td>Per-subject scores, and per-exam totals, positions, comments and skill ratings.</td></tr>
+<tr><td>payments, payment_records, receipts</td><td>Fee items, each student's balance for an item, and every part payment.</td></tr>
+<tr><td>settings</td><td>Key/value pairs: school name, current session, term dates, fees, logo, exam lock.</td></tr>
+<tr><td>promotions</td><td>History of class moves, so a promotion can be reset.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c7">7. Roles and permissions</h2>
+<p>Access is enforced by route and controller middleware. The groups are defined in <code>app/Helpers/Qs.php</code>: <strong>TeamSA</strong> = Super Admin and Admin; <strong>TeamSAT</strong> = TeamSA plus Teacher; <strong>TeamAccount</strong> = TeamSA plus Accountant. Admins cannot create or see other admins: the user form only offers types below level 2.</p>
+<table class="matrix">
+<thead><tr><th>Module / action</th><th>Super Admin</th><th>Admin</th><th>Teacher</th><th>Accountant</th><th>Student</th><th>Parent</th></tr></thead>
+<tbody>
+<tr><td>System settings</td><td class="y">Full</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Users: create, edit</td><td class="y">Full</td><td class="y">Edit<sup>1</sup></td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Users: delete, reset password</td><td class="y">Yes</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Classes, sections, subjects, dorms, exams, grades</td><td class="y">Full</td><td class="p">No delete</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Admit, edit students; promotion; graduated list</td><td class="y">Full</td><td class="p">No delete</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Student lists by class</td><td class="y">View</td><td class="y">View</td><td class="y">View</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Student profile</td><td class="y">View</td><td class="y">View</td><td class="y">View</td><td class="n">–</td><td class="p">Own</td><td class="p">Children</td></tr>
+<tr><td>Enter marks, comments, skills</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Tabulation sheet, batch fix</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>View marksheet</td><td class="y">All</td><td class="y">All</td><td class="y">All</td><td class="n">–</td><td class="p">Own</td><td class="p">Children</td></tr>
+<tr><td>Print marksheet</td><td class="y">All</td><td class="y">All</td><td class="n">–</td><td class="n">–</td><td class="p">Own</td><td class="p">Children</td></tr>
+<tr><td>Fees, invoices, receipts</td><td class="y">Full</td><td class="y">Full</td><td class="n">–</td><td class="y">Full</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Result PINs (create)</td><td class="y">Yes<sup>2</sup></td><td class="p">Route only<sup>2</sup></td><td class="n">–</td><td class="n">–</td><td class="p">Enter PIN</td><td class="p">Enter PIN</td></tr>
+<tr><td>Timetables: create, edit</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+<tr><td>Timetables: view, print</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>My account (own password, profile)</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+</tbody>
+</table>
+<p class="small"><sup>1</sup> Admins can create teachers, parents and accountants, not other admins. Delete and password reset are Super Admin only. <sup>2</sup> PIN pages only open while <em>Lock Exam</em> is on; the menu link is shown to Super Admin only, but the route also allows Admin.</p>
+<div class="callout warn"><strong>Gap found in code.</strong> Deleting a timetable record (<code>DELETE /timetables/records/{id}</code>, route <code>ttr.destroy</code>) has no role middleware, so any signed-in user could call it. Add <code>teamSA</code> to that route before going live.</div>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c8">8. How to customize safely</h2>
+<p>Keep changes in your own files where possible, commit before each change, and test with every role afterwards.</p>
+<table class="data compact">
+<thead><tr><th style="width:24%">Change</th><th>Where and how</th></tr></thead>
+<tbody>
+<tr><td>School name and logo</td><td>In the app: <em>Settings</em> → Name of School, School Acronym, Change Logo. The default logo is <code>public/images/shaheen_lms_logo.svg</code>, returned by <code>Qs::getLogo()</code>.</td></tr>
+<tr><td>Colours</td><td>Edit the variables at the top of <code>public/assets/css/shaheenlms-ui.css</code> (<code>--brand</code>, <code>--brand-strong</code>, <code>--brand-dark</code>). Keep white text only on <code>#15803D</code> or darker for readable contrast.</td></tr>
+<tr><td>Footer credit</td><td><code>resources/views/partials/footer.blade.php</code>, both the web and the print branch.</td></tr>
+<tr><td>App name in the tab title</td><td><code>APP_NAME</code> in <code>.env</code>, with <code>config/app.php</code> as the fallback.</td></tr>
+<tr><td>Currency</td><td>Hard-coded as a struck-through "N" (Naira) in payment views such as <code>payments/create.blade.php</code>, <code>edit</code> and <code>receipt</code>. Replace it there, for example with <code>Rs</code>.</td></tr>
+<tr><td>Locale and time zone</td><td><code>config/app.php</code>: <code>'timezone' =&gt; 'UTC'</code> (set e.g. <code>'Asia/Karachi'</code>), <code>'locale' =&gt; 'en'</code>. Messages are in <code>resources/lang/en</code>.</td></tr>
+<tr><td>States and LGAs</td><td>Address fields use Nigerian states and LGAs from <code>StatesTableSeeder</code> and <code>LgasTableSeeder</code>. Replace those seeders for your country before the first migration.</td></tr>
+</tbody>
+</table>
+<h3>Add a new field (example: student CNIC number)</h3>
+<ol class="steps">
+<li>Create a migration: <code>php artisan make:migration add_cnic_to_student_records</code>, add <code>$table-&gt;string('cnic')-&gt;nullable();</code>, then run <code>php artisan migrate</code>.</li>
+<li>Add <code>'cnic'</code> to <code>$fillable</code> in <code>app/Models/StudentRecord.php</code>.</li>
+<li>Add the input to <code>resources/views/pages/support_team/students/add.blade.php</code> and <code>edit.blade.php</code>.</li>
+<li>Add a rule in <code>app/Http/Requests/Student/StudentRecordCreate.php</code> and <code>StudentRecordUpdate.php</code>, and include the field where the controller collects record data.</li>
+</ol>
+<h3>Add a new page</h3>
+<pre>// routes/web.php, inside the auth group
+Route::get('notices', 'NoticeController@index')
+     -&gt;name('notices.index')-&gt;middleware('teamSA');</pre>
+<p>Create <code>app/Http/Controllers/NoticeController.php</code> returning <code>view('pages.support_team.notices.index')</code>, make the Blade file extend <code>layouts.master</code>, and add a link in <code>resources/views/partials/menu.blade.php</code> inside the matching <code>@if(Qs::userIs…())</code> block.</p>
+<h3>Add a new role</h3>
+<ol class="steps">
+<li>Insert a row in <code>user_types</code> (title, name, level).</li>
+<li>Add a <code>userIsX()</code> check, and add the title to the right groups (<code>getTeamSA</code>, <code>getTeamAccount</code>…) in <code>app/Helpers/Qs.php</code>.</li>
+<li>Create <code>resources/views/pages/&lt;title&gt;/menu.blade.php</code>; the sidebar includes it automatically by role name.</li>
+<li>Protect its routes with a middleware in <code>app/Http/Middleware/Custom</code>, registered in <code>app/Http/Kernel.php</code>.</li>
+</ol>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c9">9. Deployment guide</h2>
+<figure class="diagram">
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="13">
+  <defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs>
+  <rect x="10" y="20" width="400" height="260" rx="14" fill="#F8FAF9" stroke="#C9DBCF"/>
+  <text x="210" y="48" text-anchor="middle" font-weight="700" fill="#14532D" font-size="15">Local (development)</text>
+  <rect x="35" y="70" width="150" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="110" y="100" text-anchor="middle">Browser</text>
+  <rect x="235" y="70" width="150" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="310" y="92" text-anchor="middle">php artisan serve</text><text x="310" y="110" text-anchor="middle" font-size="11" fill="#555">127.0.0.1:8000</text>
+  <rect x="235" y="150" width="150" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="310" y="172" text-anchor="middle">XAMPP MySQL</text><text x="310" y="190" text-anchor="middle" font-size="11" fill="#555">root, no password</text>
+  <rect x="35" y="150" width="150" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="110" y="172" text-anchor="middle">.env</text><text x="110" y="190" text-anchor="middle" font-size="11" fill="#555">APP_DEBUG=true</text>
+  <text x="210" y="245" text-anchor="middle" fill="#555">One machine, demo data, debug on</text>
+  <line x1="185" y1="95" x2="233" y2="95" stroke="#166534" stroke-width="2" marker-end="url(#ar3)"/>
+  <line x1="310" y1="120" x2="310" y2="148" stroke="#166534" stroke-width="2" marker-end="url(#ar3)"/>
+  <rect x="490" y="20" width="400" height="260" rx="14" fill="#F0FDF4" stroke="#16A34A"/>
+  <text x="690" y="48" text-anchor="middle" font-weight="700" fill="#14532D" font-size="15">Live (cPanel or VPS)</text>
+  <rect x="510" y="70" width="110" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="565" y="92" text-anchor="middle">Users</text><text x="565" y="110" text-anchor="middle" font-size="11" fill="#555">HTTPS</text>
+  <rect x="645" y="70" width="225" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="757" y="92" text-anchor="middle">Apache / Nginx + PHP-FPM</text><text x="757" y="110" text-anchor="middle" font-size="11" fill="#555">document root = lav_sms/public</text>
+  <rect x="645" y="150" width="105" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="697" y="180" text-anchor="middle">MySQL</text>
+  <rect x="765" y="150" width="105" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="817" y="172" text-anchor="middle">storage/</text><text x="817" y="190" text-anchor="middle" font-size="11" fill="#555">writable</text>
+  <rect x="510" y="150" width="110" height="50" rx="8" fill="#fff" stroke="#16A34A"/><text x="565" y="172" text-anchor="middle">Backups</text><text x="565" y="190" text-anchor="middle" font-size="11" fill="#555">DB + uploads</text>
+  <text x="690" y="245" text-anchor="middle" fill="#555">APP_DEBUG=false, SSL, own credentials</text>
+  <line x1="620" y1="95" x2="643" y2="95" stroke="#166534" stroke-width="2" marker-end="url(#ar3)"/>
+  <line x1="697" y1="120" x2="697" y2="148" stroke="#166534" stroke-width="2" marker-end="url(#ar3)"/>
+  <line x1="817" y1="120" x2="817" y2="148" stroke="#166534" stroke-width="2" marker-end="url(#ar3)"/>
+</svg>
+<figcaption>Local development compared with live hosting.</figcaption>
+</figure>
+<p class="small">The deployment steps below are standard Laravel 8 practice. They were not run against a live server for this guide (<em>not verified</em> on real hosting).</p>
+<div class="grid-2">
+<div>
+<h3>Shared cPanel hosting</h3>
+<ol class="steps tight">
+<li>Choose PHP 8.0 or 8.1 in <em>Select PHP Version</em>.</li>
+<li>Upload the project above <code>public_html</code> (for example <code>~/lav_sms</code>).</li>
+<li>Point the domain's document root to <code>~/lav_sms/public</code>. If you cannot, move <code>public</code>'s contents into <code>public_html</code> and fix the paths in <code>index.php</code>.</li>
+<li>Create the MySQL database and user in cPanel.</li>
+<li>Upload a production <code>.env</code> (checklist below).</li>
+<li>In Terminal: <code>composer install --no-dev --optimize-autoloader</code>, <code>php artisan migrate --force</code>, <code>php artisan storage:link</code>, <code>php artisan config:cache</code>.</li>
+<li>Turn on AutoSSL for the domain.</li>
+</ol>
+</div>
+<div>
+<h3>VPS (Ubuntu, Nginx)</h3>
+<ol class="steps tight">
+<li>Install Nginx, PHP 8.1-FPM, MySQL 8 and Composer.</li>
+<li>Clone into <code>/var/www/shaheenlms</code>; set the Nginx <code>root</code> to <code>…/public</code> with <code>try_files $uri $uri/ /index.php?$query_string;</code>.</li>
+<li><code>chown -R www-data:www-data storage bootstrap/cache</code>, <code>chmod -R 775</code> on the same folders.</li>
+<li>Run the same Composer and Artisan commands as for cPanel.</li>
+<li>Get SSL: <code>certbot --nginx -d school.example.com</code>.</li>
+<li>Schedule nightly database and <code>storage/app/public</code> backups to another machine.</li>
+</ol>
+</div>
+</div>
+<table class="data compact checklist">
+<thead><tr><th style="width:40%">Production checklist</th><th>Value or action</th></tr></thead>
+<tbody>
+<tr><td>PHP version and extensions</td><td>8.0 or 8.1; pdo_mysql, mbstring, openssl, fileinfo, gd, dom, zip (all present on the test machine)</td></tr>
+<tr><td>Document root</td><td>The <code>public</code> folder only, never the project root</td></tr>
+<tr><td>.env</td><td><code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, real <code>APP_URL</code> with https, new <code>APP_KEY</code>, strong database password</td></tr>
+<tr><td>Migrate</td><td><code>php artisan migrate --force</code>. Seed only on purpose: the seeders create demo users with the password <code>cj</code>.</td></tr>
+<tr><td>Storage</td><td><code>php artisan storage:link</code>; <code>storage</code> and <code>bootstrap/cache</code> writable by the web server</td></tr>
+<tr><td>Caches</td><td><code>config:cache</code>, <code>route:cache</code>, <code>view:cache</code> after each deploy</td></tr>
+<tr><td>Cron</td><td>Optional: the scheduler has no tasks defined (<code>app/Console/Kernel.php</code>). Add <code>* * * * * php artisan schedule:run</code> only if you add tasks.</td></tr>
+<tr><td>Backups</td><td>Daily <code>mysqldump</code> plus a copy of <code>storage/app/public</code>, kept off-server; test a restore</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c10">10. Security and maintenance checklist</h2>
+<div class="callout danger"><strong>Laravel 8 is end of life.</strong> Laravel 8 stopped receiving security fixes in January 2023. Plan the upgrade path 8 → 9 → 10 → 11, one major version at a time. At each step, update <code>composer.json</code>, follow the official upgrade guide, run the tests and click through every role. Replace barryvdh/laravel-dompdf 0.8 with 2.x at the same time.</div>
+<table class="data compact checklist ticks">
+<thead><tr><th style="width:5%"></th><th>Item</th><th style="width:44%">Why (verified in code)</th></tr></thead>
+<tbody>
+<tr><td>☐</td><td>Delete or change all demo accounts</td><td>Seeders create six demo logins with the password <code>cj</code>.</td></tr>
+<tr><td>☐</td><td>Make users change default passwords</td><td>New students get the password <code>student</code>; new staff get their role name (e.g. <code>teacher</code>) when the field is left blank. Password resets set these same values.</td></tr>
+<tr><td>☐</td><td>Set <code>APP_DEBUG=false</code></td><td>The local <code>.env</code> and <code>.env.example</code> both have <code>APP_DEBUG=true</code>, which shows stack traces to visitors.</td></tr>
+<tr><td>☐</td><td>Disable public registration</td><td><code>Auth::routes()</code> exposes <code>/register</code> (it returns HTTP 200). Use <code>Auth::routes(['register' =&gt; false])</code>.</td></tr>
+<tr><td>☐</td><td>Restrict timetable record deletion</td><td><code>ttr.destroy</code> has no role check (chapter 7).</td></tr>
+<tr><td>☐</td><td>Block SVG logo uploads</td><td><code>SettingUpdate</code> accepts <code>svg</code>; an SVG can carry script. Allow png and jpg only.</td></tr>
+<tr><td>☐</td><td>Raise password rules</td><td><code>UserRequest</code> allows passwords of only 3 characters.</td></tr>
+<tr><td>☐</td><td>Back up daily and test restores</td><td>The app has no built-in backup.</td></tr>
+<tr><td>☐</td><td>Apply updates monthly</td><td><code>composer update</code> within the current major version, then retest.</td></tr>
+<tr><td>☐</td><td>Use HTTPS everywhere</td><td>Logins and student data travel in every request.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c11">11. Known limitations and recommended improvements</h2>
+<table class="data compact">
+<thead><tr><th style="width:8%">Priority</th><th style="width:34%">Issue</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td><span class="tag danger">1</span></td><td>Receipt PDF download returns HTTP 500 on PHP 8.1 (dompdf 0.8.3 deprecation error, reproduced)</td><td>Upgrade to barryvdh/laravel-dompdf 2.x, or use PHP 7.4 temporarily. The printable HTML receipt still works.</td></tr>
+<tr><td><span class="tag danger">2</span></td><td>Laravel 8 end of life</td><td>Upgrade path in chapter 10.</td></tr>
+<tr><td><span class="tag danger">3</span></td><td>Default and demo passwords, <code>APP_DEBUG=true</code>, open <code>/register</code></td><td>Production checklist in chapters 9 and 10.</td></tr>
+<tr><td><span class="tag warn">4</span></td><td>Timetable record delete has no role check; SVG logo upload allowed</td><td>Add <code>teamSA</code> middleware; restrict mimes to png and jpg.</td></tr>
+<tr><td><span class="tag warn">5</span></td><td>Dashboard calendar shows template demo events (<code>fullcalendar_basic.js</code>), not school events</td><td>Build an events table, or hide the calendar.</td></tr>
+<tr><td><span class="tag warn">6</span></td><td>Naira currency, Nigerian states and LGAs, WAEC/NECO document types are hard-coded</td><td>Localize for your country before launch.</td></tr>
+<tr><td><span class="tag note">7</span></td><td>Library module unfinished (models and controllers, no routes); no noticeboard or study materials</td><td>Build as new modules or remove the dead code.</td></tr>
+<tr><td><span class="tag note">8</span></td><td>Only placeholder tests (<code>tests/Feature/ExampleTest.php</code> fails: expects 200 from <code>/</code>, gets a redirect)</td><td>Add feature tests per role before any upgrade.</td></tr>
+<tr><td><span class="tag note">9</span></td><td>Seed data sets the session to 2018-2019 and sample term dates in 2018</td><td>Set the real session and dates in Settings on day one.</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============================ PART B ============================ -->
+<section class="part-divider" data-part="Part B">
+  <p class="part-label">Part B</p>
+  <h1 class="part-title" data-toc="partB">Institute user manual</h1>
+  <p>Step-by-step instructions for staff, students and parents. Screens show the demo data; your school's names and numbers will differ.</p>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c12">12. First-time setup order</h2>
+<p>Records depend on each other, so set the school up in this order. Every later step needs the earlier ones.</p>
+<figure class="diagram">
+<svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="13">
+  <defs><marker id="ar4" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs>
+  <g font-weight="600">
+    <rect x="5" y="30" width="125" height="58" rx="10" fill="#166534"/><text x="67" y="56" text-anchor="middle" fill="#fff">1 Settings</text><text x="67" y="75" text-anchor="middle" fill="#DCFCE7" font-weight="400" font-size="11">name, session, logo</text>
+    <rect x="155" y="30" width="125" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="217" y="56" text-anchor="middle">2 Staff</text><text x="217" y="75" text-anchor="middle" font-weight="400" font-size="11" fill="#555">teachers, accountant</text>
+    <rect x="305" y="30" width="125" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="367" y="56" text-anchor="middle">3 Classes</text><text x="367" y="75" text-anchor="middle" font-weight="400" font-size="11" fill="#555">+ sections</text>
+    <rect x="455" y="30" width="125" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="517" y="56" text-anchor="middle">4 Subjects</text><text x="517" y="75" text-anchor="middle" font-weight="400" font-size="11" fill="#555">per class + teacher</text>
+    <rect x="605" y="30" width="125" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="667" y="56" text-anchor="middle">5 Students</text><text x="667" y="75" text-anchor="middle" font-weight="400" font-size="11" fill="#555">admission, parents</text>
+    <rect x="755" y="30" width="140" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="825" y="56" text-anchor="middle">6 Exams</text><text x="825" y="75" text-anchor="middle" font-weight="400" font-size="11" fill="#555">grades, exam per term</text>
+    <rect x="605" y="160" width="125" height="58" rx="10" fill="#fff" stroke="#16A34A" stroke-width="2"/><text x="667" y="186" text-anchor="middle">7 Marks</text><text x="667" y="205" text-anchor="middle" font-weight="400" font-size="11" fill="#555">teachers enter</text>
+    <rect x="455" y="160" width="125" height="58" rx="10" fill="#166534"/><text x="517" y="186" text-anchor="middle" fill="#fff">8 Marksheets</text><text x="517" y="205" text-anchor="middle" fill="#DCFCE7" font-weight="400" font-size="11">tabulation, print</text>
+    <rect x="155" y="160" width="250" height="58" rx="10" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/><text x="280" y="186" text-anchor="middle">In parallel: Fees → invoices → receipts</text><text x="280" y="205" text-anchor="middle" font-weight="400" font-size="11" fill="#555">needs classes and students (steps 3 and 5)</text>
+  </g>
+  <g stroke="#166534" stroke-width="2" marker-end="url(#ar4)" fill="none">
+    <line x1="130" y1="59" x2="153" y2="59"/><line x1="280" y1="59" x2="303" y2="59"/><line x1="430" y1="59" x2="453" y2="59"/><line x1="580" y1="59" x2="603" y2="59"/><line x1="730" y1="59" x2="753" y2="59"/>
+    <path d="M825,88 L825,189 L732,189"/><line x1="605" y1="189" x2="582" y2="189"/>
+    <path d="M667,88 C667,125 330,120 300,158"/>
+  </g>
+</svg>
+<figcaption>Main workflow. Fees run in parallel once classes and students exist.</figcaption>
+</figure>
+<table class="data compact">
+<thead><tr><th style="width:5%">#</th><th style="width:24%">Step</th><th>Where</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>School settings</td><td>Settings: name, acronym, phone, email, address, <strong>current session</strong>, term dates, logo.</td></tr>
+<tr><td>2</td><td>Staff accounts</td><td>Users → Create New User (teachers, accountant, parents).</td></tr>
+<tr><td>3</td><td>Classes and sections</td><td>Classes → Add Class; Sections → Add Section (choose the form teacher).</td></tr>
+<tr><td>4</td><td>Subjects</td><td>Subjects → Add Subject (class and teacher).</td></tr>
+<tr><td>5</td><td>Students</td><td>Students → Admit Student (link the parent account).</td></tr>
+<tr><td>6</td><td>Grades and exams</td><td>Exams → Grades, then Exam List → Add Exam.</td></tr>
+<tr><td>7</td><td>Fees</td><td>Administrative → Payments → Create Payment.</td></tr>
+</tbody>
+</table>
+<figure data-shot="sa-settings" class="shot" data-cap="System settings (Super Admin). Set the current session first: student lists, marks and fees all filter by it."></figure>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c13">13. Task guides by role</h2>
+<h3 data-toc="c13-login">Signing in</h3>
+<ol class="steps">
+<li>Open the school's ShaheenLMS address in a browser.</li>
+<li>Enter your <strong>username or email</strong> and your <strong>password</strong>, then press <strong>Sign in</strong>.</li>
+<li>Forgot your password? Ask an administrator to reset it. The email reset link needs mail settings in <code>.env</code> (<em>not verified</em>).</li>
+</ol>
+<figure data-shot="login" class="shot half" data-cap="Login page."></figure>
+<figure data-shot="sa-dashboard" class="shot" data-cap="Super Admin dashboard. The sidebar changes by role; the four totals appear for Super Admin and Admin only."></figure>
+
+<h3 data-toc="c13-admin">Admin and Super Admin tasks</h3>
+<h4>How to admit a student</h4>
+<ol class="steps">
+<li>Open <strong>Students → Admit Student</strong>.</li>
+<li>Step 1, <em>Personal data</em>: full name, address, gender, nationality, state and LGA (all required), plus optional email, phone, date of birth, blood group and photo (JPEG or PNG, up to 2 MB).</li>
+<li>Press <strong>Next</strong>. Step 2, <em>Student data</em>: class, section, year admitted, parent, dormitory and admission number.</li>
+<li>Press <strong>Submit</strong>. The student's first password is <code>student</code>; ask them to change it.</li>
+</ol>
+<figure data-shot="sa-student-admit" class="shot" data-cap="Admit Student, step 1 of 2."></figure>
+<figure data-shot="sa-students-list" class="shot" data-cap="Student list for one class. Use the row menu to view, edit, reset the password or (Super Admin only) delete."></figure>
+<h4>How to create a staff or parent account</h4>
+<ol class="steps">
+<li>Open <strong>Users</strong>, tab <strong>Create New User</strong>.</li>
+<li>Choose the <strong>user type</strong>, fill the required fields (name, address, gender, nationality, state, LGA) and optionally a username and password.</li>
+<li>Press <strong>Submit</strong>. If you leave the password blank, it becomes the role name (for example <code>teacher</code>).</li>
+</ol>
+<figure data-shot="sa-users" class="shot" data-cap="Users page with the Create New User form."></figure>
+<h4>How to set up classes, sections and subjects</h4>
+<ol class="steps">
+<li><strong>Classes → Add Class</strong>: name and class type.</li>
+<li><strong>Sections → Add Section</strong>: name, class and form teacher.</li>
+<li><strong>Subjects → Add Subject</strong>: name, short name, class and teacher.</li>
+</ol>
+<figure data-shot="sa-classes" class="shot" data-cap="Classes."></figure>
+<figure data-shot="sa-subjects" class="shot" data-cap="Subjects."></figure>
+<h4>How to set up grades and exams</h4>
+<ol class="steps">
+<li><strong>Exams → Grades</strong>: check the grade bands for each class type (A to F, each with a mark range and remark; for example A = 70–100, Excellent).</li>
+<li><strong>Exams → Exam List → Add Exam</strong>: name and term (1, 2 or 3). The exam belongs to the current session.</li>
+</ol>
+<figure data-shot="sa-exams" class="shot" data-cap="Exam list."></figure>
+<figure data-shot="sa-grades" class="shot" data-cap="Grades."></figure>
+<h4>How to print a tabulation sheet</h4>
+<ol class="steps">
+<li>Open <strong>Exams → Tabulation Sheet</strong>.</li>
+<li>Choose the exam, class and section, then press <strong>View Sheet</strong>.</li>
+<li>Press <strong>Print Tabulation Sheet</strong> to open the printable page, then print from the browser.</li>
+</ol>
+<figure data-shot="sa-tabulation" class="shot" data-cap="Tabulation sheet selector. The sheet itself needs entered marks; none exist in the demo data (not verified)."></figure>
+<h4>How to promote students</h4>
+<ol class="steps">
+<li>Open <strong>Students → Student Promotion → Promote Students</strong>.</li>
+<li>Choose the current class and section, and the class and section to promote to, then load the students.</li>
+<li>For each student, choose promote, don't promote or graduate, then submit. Mistakes can be undone under <strong>Manage Promotions</strong>.</li>
+</ol>
+<figure data-shot="sa-promotion" class="shot" data-cap="Student promotion selector."></figure>
+<h4>How to build a timetable</h4>
+<ol class="steps">
+<li>Open <strong>Academics → Timetables</strong> and create a timetable record for a class (and, for exam timetables, an exam).</li>
+<li>Open the record with <strong>Manage</strong>, add time slots, then assign subjects to each day and slot.</li>
+<li>Everyone can view and print timetables from the same menu.</li>
+</ol>
+<figure data-shot="sa-timetables" class="shot" data-cap="Timetables."></figure>
+
+<h3 data-toc="c13-teacher">Teacher tasks</h3>
+<p>Teachers see the Academics, Students and Exams menus. They can view class lists, enter marks and view marksheets. They cannot create students or print tabulation sheets.</p>
+<figure data-shot="teacher-dashboard" class="shot" data-cap="Teacher dashboard and menu."></figure>
+<h4>How to enter marks</h4>
+<ol class="steps">
+<li>Open <strong>Exams → Marks</strong>.</li>
+<li>Choose the <strong>exam, class, section and subject</strong>, then press <strong>Manage Marks</strong>.</li>
+<li>Type each student's continuous assessment (CA) and exam scores (the total cannot exceed 100), then press <strong>Update Marks</strong>. Grades, subject positions and term totals are calculated for you.</li>
+</ol>
+<figure data-shot="sa-marks-select" class="shot" data-cap="Mark entry selector."></figure>
+<div class="callout warn"><strong>Seen during testing.</strong> In this demo database the current session is 2025-2026, but the seeded students are enrolled in 2018-2019. Manage Marks therefore shows "Record Not Found". The mark-entry grid could not be captured for this guide (<em>not verified</em>).</div>
+<h4>How to view and print a marksheet</h4>
+<ol class="steps">
+<li>Open <strong>Exams → Marksheet</strong>, choose a class and section, and press the student's <strong>View Marksheet</strong> button.</li>
+<li>Choose the year to see each exam's results.</li>
+<li>Press <strong>Print Marksheet</strong> for the print layout. Super Admin, Admin, the student and their parent can print; teachers can view only.</li>
+</ol>
+<figure data-shot="sa-marksheet-select" class="shot" data-cap="Marksheet selector."></figure>
+
+<h3 data-toc="c13-acct">Accountant tasks</h3>
+<figure data-shot="accountant-dashboard" class="shot" data-cap="Accountant dashboard: only Administrative → Payments and My Account."></figure>
+<h4>How to create a fee</h4>
+<ol class="steps">
+<li>Open <strong>Administrative → Payments → Create Payment</strong>.</li>
+<li>Enter the title, choose the class (or leave it empty for all classes), the method and the amount.</li>
+<li>Press <strong>Submit form</strong>. A reference number is generated.</li>
+</ol>
+<figure data-shot="sa-payment-create" class="shot" data-cap="Create Payment."></figure>
+<h4>How to collect a fee and print a receipt</h4>
+<ol class="steps">
+<li>Open <strong>Payments → Student Payments</strong>, choose the class and press <strong>Submit</strong>. This creates each student's fee records for the session.</li>
+<li>In the student's row, open <strong>Manage Payments → All Payments</strong>.</li>
+<li>Under <em>Incomplete Payments</em>, type the amount received in <strong>Pay Now</strong> and press <strong>Pay</strong>. Paid and balance update at once; part payments are allowed.</li>
+<li>Use <strong>Print Receipt</strong> for the printable receipt. The <em>PDF</em> download fails on PHP 8.1 until dompdf is upgraded (chapter 11).</li>
+</ol>
+<figure data-shot="sa-student-payments" class="shot" data-cap="Student Payments for one class."></figure>
+
+<h3 data-toc="c13-student">Student tasks</h3>
+<figure data-shot="student-dashboard" class="shot" data-cap="Student dashboard: Academics (timetable), Marksheet and My Account."></figure>
+<ol class="steps">
+<li><strong>See your profile:</strong> user menu (top right) → <strong>My profile</strong>.</li>
+<li><strong>See your timetable:</strong> <strong>Academics → Timetables</strong>.</li>
+<li><strong>See your results:</strong> <strong>Marksheet</strong>, then choose the year. If the school has locked results, enter your PIN when asked.</li>
+<li><strong>Change your password:</strong> <strong>My Account → Change Password</strong>. Do this on your first login.</li>
+</ol>
+<figure data-shot="student-profile" class="shot" data-cap="Student profile."></figure>
+<div class="callout note"><strong>Seen during testing.</strong> With no exam records in the demo data, the student's Marksheet link returns to the dashboard.</div>
+
+<h3 data-toc="c13-parent">Parent tasks</h3>
+<ol class="steps">
+<li><strong>See your children:</strong> <strong>My Children</strong> lists each linked child, with links to their profile and marksheet.</li>
+<li><strong>See results:</strong> open a child's marksheet; printing is allowed for your own children.</li>
+<li>If a child is missing, ask the school to set you as the parent on the child's admission record.</li>
+</ol>
+<figure data-shot="parent-children" class="shot" data-cap="My Children (parent). The demo parent has no linked children."></figure>
+
+<h3 data-toc="c13-account">Everyone: My Account</h3>
+<figure data-shot="sa-my-account" class="shot" data-cap="My Account: change password, or update profile details."></figure>
+
+<h3 data-toc="c13-mobile">On a phone</h3>
+<p>The layout adapts to phone screens: the sidebar collapses behind the menu button (top right), tables scroll sideways, and the dashboard totals show two to a row.</p>
+<div class="fig-row three">
+<figure data-shot="m-login" class="shot phone" data-cap="Login on a phone."></figure>
+<figure data-shot="m-dashboard" class="shot phone" data-cap="Dashboard on a phone."></figure>
+<figure data-shot="m-students-list" class="shot phone" data-cap="Student list on a phone."></figure>
+</div>
+</section>
+
+<section class="chapter">
+<h2 data-toc="c14">14. FAQ and troubleshooting</h2>
+<dl class="faq">
+<dt>Marks or student payments say "Record Not Found".</dt>
+<dd>No students are enrolled in the <em>current session</em>. Check Settings → Current Session, and promote students into the new session at the start of each year.</dd>
+<dt>A student cannot see their results.</dt>
+<dd>Check that marks were entered for that exam, and whether <em>Lock Exam</em> is on. When it is on, the student needs a result PIN.</dd>
+<dt>I forgot my password.</dt>
+<dd>A Super Admin can reset it from the user's row menu. The new password becomes <code>student</code> for students, or the role name for staff.</dd>
+<dt>Photos do not appear after upload.</dt>
+<dd>The server is missing the storage link. The developer should run <code>php artisan storage:link</code>.</dd>
+<dt>Receipt PDF shows an error.</dt>
+<dd>Use <strong>Print Receipt</strong> and the browser's "Save as PDF" until the PDF library is upgraded.</dd>
+<dt>An admin cannot see the Settings or Pins menu.</dt>
+<dd>That is by design: Settings and the PIN menu belong to the Super Admin.</dd>
+<dt>The calendar shows events we never created.</dt>
+<dd>They are sample events from the theme and are not stored in the database.</dd>
+<dt>The page says "419 Page Expired".</dt>
+<dd>Your session timed out. Refresh the page and sign in again.</dd>
+</dl>
+</section>
+
+<!-- ============================ APPENDICES ============================ -->
+<section class="part-divider short" data-part="Appendices">
+  <p class="part-label">Appendices</p>
+  <h1 class="part-title" data-toc="partC">Reference</h1>
+</section>
+
+<section class="chapter">
+<h2 data-toc="aA">A. Demo accounts</h2>
+<div class="callout danger"><strong>Demo only.</strong> These accounts are created by <code>database/seeders/UsersTableSeeder.php</code> and <code>StudentRecordsTableSeeder.php</code>. Delete them, or change every password, before real data goes in.</div>
+<table class="data compact">
+<thead><tr><th>Role</th><th>Login (email)</th><th>Username</th><th>Password</th></tr></thead>
+<tbody>
+<tr><td>Super Admin</td><td>cj@cj.com</td><td>cj</td><td>cj</td></tr>
+<tr><td>Admin</td><td>admin@admin.com</td><td>admin</td><td>cj</td></tr>
+<tr><td>Teacher</td><td>teacher@teacher.com</td><td>teacher</td><td>cj</td></tr>
+<tr><td>Accountant</td><td>accountant@accountant.com</td><td>accountant</td><td>cj</td></tr>
+<tr><td>Parent</td><td>parent@parent.com</td><td>parent</td><td>cj</td></tr>
+<tr><td>Student</td><td>student@student.com</td><td>student</td><td>cj</td></tr>
+</tbody>
+</table>
+<p class="small">The seeders also create numbered extra users (for example <code>teacher1</code>) whose password is their role name, and 36 sample students whose password is <code>student</code>.</p>
+</section>
+
+<section class="chapter">
+<h2 data-toc="aB">B. Glossary</h2>
+<table class="data compact">
+<tbody>
+<tr><td style="width:24%"><strong>Session</strong></td><td>An academic year, e.g. 2025-2026. Students, marks and fees are tied to one.</td></tr>
+<tr><td><strong>Term</strong></td><td>One of three parts of a session; each exam belongs to a term.</td></tr>
+<tr><td><strong>Class type</strong></td><td>A group of classes sharing a grade scale: Creche, Pre-Nursery, Nursery, Primary, Junior and Senior Secondary.</td></tr>
+<tr><td><strong>Section</strong></td><td>A division of a class (e.g. Nursery 1 Gold) with a form teacher.</td></tr>
+<tr><td><strong>Marksheet</strong></td><td>One student's report card for an exam.</td></tr>
+<tr><td><strong>Tabulation sheet</strong></td><td>All students and subjects of a section for one exam, in a single grid.</td></tr>
+<tr><td><strong>Result PIN</strong></td><td>A code a student enters to see results while the exam is locked.</td></tr>
+<tr><td><strong>LGA</strong></td><td>Local Government Area (Nigerian address field kept from the original project).</td></tr>
+<tr><td><strong>TeamSA / TeamSAT / TeamAccount</strong></td><td>Code names for role groups (chapter 7).</td></tr>
+<tr><td><strong>Migration / seeder</strong></td><td>Laravel files that create tables and fill them with starting data.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h2 data-toc="aC">C. Route and module quick reference</h2>
+<table class="data compact mono">
+<thead><tr><th style="width:36%">URL</th><th style="width:26%">Route name</th><th>Access</th></tr></thead>
+<tbody>
+<tr><td>/login</td><td>login</td><td>Public</td></tr>
+<tr><td>/dashboard</td><td>dashboard</td><td>Signed in</td></tr>
+<tr><td>/my_account</td><td>my_account</td><td>Signed in</td></tr>
+<tr><td>/super_admin/settings</td><td>settings</td><td>Super Admin</td></tr>
+<tr><td>/users</td><td>users.index</td><td>TeamSA</td></tr>
+<tr><td>/students/create</td><td>students.create</td><td>TeamSA</td></tr>
+<tr><td>/students/list/{class}</td><td>students.list</td><td>TeamSAT</td></tr>
+<tr><td>/students/promotion</td><td>students.promotion</td><td>TeamSA</td></tr>
+<tr><td>/students/graduated</td><td>students.graduated</td><td>TeamSA</td></tr>
+<tr><td>/classes, /sections, /subjects</td><td>*.index</td><td>TeamSA (delete: Super Admin)</td></tr>
+<tr><td>/dorms, /exams, /grades</td><td>*.index</td><td>TeamSA (delete: Super Admin)</td></tr>
+<tr><td>/marks</td><td>marks.index</td><td>TeamSAT</td></tr>
+<tr><td>/marks/bulk</td><td>marks.bulk</td><td>TeamSAT</td></tr>
+<tr><td>/marks/tabulation</td><td>marks.tabulation</td><td>TeamSA</td></tr>
+<tr><td>/marks/batch_fix</td><td>marks.batch_fix</td><td>TeamSA</td></tr>
+<tr><td>/marks/show/{id}/{year}</td><td>marks.show</td><td>Own, child, TeamSAT</td></tr>
+<tr><td>/marks/print/{id}/{exam}/{year}</td><td>marks.print</td><td>Own, child, TeamSA</td></tr>
+<tr><td>/timetables</td><td>tt.index</td><td>Signed in (edit: TeamSA)</td></tr>
+<tr><td>/payments, /payments/create</td><td>payments.*</td><td>TeamAccount</td></tr>
+<tr><td>/payments/manage/{class}</td><td>payments.manage</td><td>TeamAccount</td></tr>
+<tr><td>/payments/invoice/{id}</td><td>payments.invoice</td><td>TeamAccount</td></tr>
+<tr><td>/payments/receipts/{id}</td><td>payments.receipts</td><td>TeamAccount</td></tr>
+<tr><td>/pins</td><td>pins.index</td><td>TeamSA, only while exam locked</td></tr>
+<tr><td>/my_children</td><td>my_children</td><td>Parent</td></tr>
+<tr><td>/register</td><td>register</td><td>Public (should be disabled)</td></tr>
+</tbody>
+</table>
+</section>
+
+</body>
+</html>
