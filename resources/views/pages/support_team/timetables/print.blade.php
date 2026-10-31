@@ -38,10 +38,10 @@
         <table width="100%">
             <tr>
                 <td >
-                    <strong><span style="color: #1b0c80; font-size: 25px;">{{ strtoupper(config('app.name')) }}</span></strong><br/>
-                    {{-- <strong><span style="color: #1b0c80; font-size: 20px;">MINNA, NIGER STATE</span></strong><br/>--}}
+                    <strong><span style="color: #166534; font-size: 25px;">{{ strtoupper(config('app.name')) }}</span></strong><br/>
+                    {{-- <strong><span style="color: #166534; font-size: 20px;">MINNA, NIGER STATE</span></strong><br/>--}}
                     <strong><span style="color: #000; font-size: 15px;"><i>{{ ucwords($s['address']) }}</i></span></strong><br/>
-                    <strong><span style="color: #000; text-decoration: underline; font-size: 15px;"><i>{{ config('app.url') }}/i></span></strong>
+                    <strong><span style="color: #000; text-decoration: underline; font-size: 15px;"><i>{{ config('app.url') }}</i></span></strong>
                     <br /> <br />
                     <strong><span style="color: #000; font-size: 15px;"> TIMETABLE FOR {{ strtoupper($my_class->name. ' ('.$ttr->year.')' ) }}
                     </span></strong>
@@ -51,7 +51,7 @@
 
         {{--Background Logo--}}
         <div style="position: relative;  text-align: center; ">
-            <img src="{{ $s['logo'] }}"
+            <img src="{{ $s['logo'] ?: Qs::getDefaultLogo() }}"
                  style="max-width: 500px; max-height:600px; margin-top: 60px; position:absolute ; opacity: 0.2; margin-left: auto;margin-right: auto; left: 0; right: 0;" />
         </div>
 
@@ -84,9 +84,9 @@
             @endforeach
             </tbody>
         </table>
+        @include('partials.footer', ['is_print' => true])
     </div>
 </div>
-
 <script>
     window.print();
 </script>

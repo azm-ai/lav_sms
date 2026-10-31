@@ -1,0 +1,243 @@
+/**
+ * ShaheenLMS Brand Theme
+ * Primary: #16A34A (Green)
+ * Dark Green: #166534
+ * Light Green Tint: #DCFCE7
+ * Crafted for ShaheenLMS
+ */
+
+:root {
+  --primary: #16A34A;
+  --primary-dark: #166534;
+  --primary-darker: #14532d;
+  --primary-light: #DCFCE7;
+  --primary-light-border: #bbf7d0;
+  --primary-hover: #15803d;
+  --primary-focus: rgba(22, 163, 74, 0.25);
+  --success: #16A34A;
+  --blue: #16A34A;
+}
+
+/* 1. Global Link & Typography Styles */
+a {
+  color: var(--primary-dark);
+}
+a:hover, a:focus {
+  color: var(--primary-darker);
+}
+.text-primary, .text-blue {
+  color: var(--primary) !important;
+}
+.text-primary-800, .text-primary-700 {
+  color: var(--primary-dark) !important;
+}
+
+/* 2. Primary Buttons */
+.btn-primary, 
+.btn.bg-blue, 
+.btn.bg-blue-400, 
+button[type="submit"].btn-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+.btn-primary:hover, 
+.btn.bg-blue:hover, 
+.btn.bg-blue-400:hover, 
+button[type="submit"].btn-primary:hover,
+.btn-primary:focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.show > .btn-primary.dropdown-toggle {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 0.2rem var(--primary-focus) !important;
+}
+.btn-outline-primary {
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+.btn-link.text-primary {
+  color: var(--primary-dark) !important;
+}
+
+/* 3. Badges */
+.badge-primary, .badge-blue {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+.badge-light-green {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* 4. Navbar (Top Menu) */
+.navbar-dark {
+  background-color: var(--primary-dark) !important;
+  border-bottom: 1px solid var(--primary-darker) !important;
+  color: #FFFFFF !important;
+}
+.navbar-dark .navbar-nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.navbar-dark .navbar-nav-link:hover, 
+.navbar-dark .navbar-nav-link:focus {
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+.navbar-dark .navbar-brand {
+  color: #FFFFFF !important;
+}
+
+/* 5. Sidebar Menu */
+.sidebar-dark {
+  background-color: var(--primary-darker) !important;
+  color: #FFFFFF !important;
+}
+.sidebar-dark .sidebar-mobile-toggler {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+.sidebar-dark .sidebar-user {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.sidebar-dark .nav-sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.sidebar-dark .nav-sidebar .nav-link i {
+  color: var(--primary-light) !important;
+}
+.sidebar-dark .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark .nav-sidebar .nav-item-open > .nav-link:not(.disabled),
+.sidebar-dark .nav-sidebar > .nav-item-submenu.nav-item-open > .nav-link {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+.sidebar-dark .nav-sidebar > .nav-item > .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+}
+.sidebar-dark .nav-sidebar .nav-group-sub .nav-link.active {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+
+/* 6. Form Controls & Focus States */
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem var(--primary-focus) !important;
+}
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+.checker span.checked:after,
+.choice span.checked:after {
+  color: var(--primary) !important;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+
+/* 7. Tables & Table Headers */
+.table thead th {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-dark) !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--primary-light-border) !important;
+}
+.table-primary, 
+.table-primary > th, 
+.table-primary > td {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* 8. Tabs, Navigation & Pagination */
+.nav-tabs .nav-link.active,
+.nav-tabs-bottom .nav-link.active {
+  color: var(--primary-dark) !important;
+  border-bottom: 2px solid var(--primary) !important;
+  font-weight: 600 !important;
+}
+.page-item.active .page-link {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+.page-link {
+  color: var(--primary-dark);
+}
+.page-link:hover {
+  color: var(--primary-darker);
+}
+
+/* 9. Cards & Alerts */
+.card-header.bg-primary {
+  background-color: var(--primary-dark) !important;
+  color: #FFFFFF !important;
+}
+.alert-primary {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary-light-border) !important;
+  color: var(--primary-dark) !important;
+}
+.alert-success {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary-light-border) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* 10. Calendar Events (FullCalendar) */
+.fc-event, .fc-event-dot, .fc-daygrid-event {
+  background-color: var(--primary) !important;
+  border-color: var(--primary-dark) !important;
+  color: #FFFFFF !important;
+}
+.fc-button-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+.fc-button-primary:hover,
+.fc-button-primary:active,
+.fc-button-primary.fc-button-active {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  color: #FFFFFF !important;
+}
+
+/* 11. Footer Credit Styling */
+.shaheenlms-footer {
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  font-size: 13px !important;
+}
+.shaheenlms-footer a {
+  color: var(--primary-dark);
+}
+.shaheenlms-footer a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.tenh-tech-link {
+  color: #64748b !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease-in-out, text-decoration 0.15s ease-in-out;
+}
+.tenh-tech-link:hover,
+.tenh-tech-link:focus {
+  color: var(--primary) !important;
+  text-decoration: underline !important;
+}

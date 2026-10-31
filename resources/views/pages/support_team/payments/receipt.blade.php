@@ -12,8 +12,8 @@
 
                 <td>
                     <strong><span
-                                style="color: #1b0c80; font-size: 25px;">{{ strtoupper(Qs::getSetting('system_name')) }}</span></strong><br/>
-                    {{-- <strong><span style="color: #1b0c80; font-size: 20px;">MINNA, NIGER STATE</span></strong><br/>--}}
+                                style="color: #166534; font-size: 25px;">{{ strtoupper(Qs::getSetting('system_name')) }}</span></strong><br/>
+                    {{-- <strong><span style="color: #166534; font-size: 20px;">MINNA, NIGER STATE</span></strong><br/>--}}
                     <strong><span
                                 style="color: #000; font-size: 15px;"><i>{{ ucwords($s['address']) }}</i></span></strong>
                     <br/> <br/>
@@ -25,13 +25,13 @@
 
         {{--Background Logo--}}
         <div style="position: relative;  text-align: center; ">
-            <img src="{{ $s['logo'] }}"
+            <img src="{{ $s['logo'] ?: Qs::getDefaultLogo() }}"
                  style="max-width: 500px; max-height:600px; margin-top: 60px; position:absolute ; opacity: 0.1; margin-left: auto;margin-right: auto; left: 0; right: 0;"/>
         </div>
 
         {{--Receipt No --}}
     <div class="bold arial" style="text-align: center; float:right; width: 200px; padding: 5px; margin-right:30px">
-        <div style="padding: 10px 20px; width: 200px; background-color: lightcyan;">
+        <div style="padding: 10px 20px; width: 200px; background-color: #DCFCE7;">
             <span  style="font-size: 16px;">Receipt Reference No.</span>
         </div>
         <div  style="padding: 10px 20px; width: 200px; background-color: lightyellow;">
@@ -42,7 +42,7 @@
         <div style="clear: both"></div>
 
         {{-- Student Info --}}
-        <div style="margin-top:5px; display: block; background-color: rgba(92, 172, 237, 0.12); padding: 5px; ">
+        <div style="margin-top:5px; display: block; background-color: #DCFCE7; padding: 5px; ">
             <span style="font-weight:bold; font-size: 20px; color: #000; padding-left: 10px">STUDENT INFORMATION</span>
         </div>
 
@@ -70,7 +70,7 @@
         <div class="clear"></div>
 
         {{-- Payment Info --}}
-        <div style="margin-top:5px; display: block; background-color: rgba(92, 172, 237, 0.12); padding: 5px; ">
+        <div style="margin-top:5px; display: block; background-color: #DCFCE7; padding: 5px; ">
             <span style="font-weight:bold; font-size: 20px; color: #000; padding-left: 10px">PAYMENT INFORMATION</span>
         </div>
 
@@ -90,7 +90,7 @@
             </table>
 
         {{-- Payment Desc --}}
-        <div style="margin-top:5px; display: block; background-color: rgba(92, 172, 237, 0.12); padding: 5px; ">
+        <div style="margin-top:5px; display: block; background-color: #DCFCE7; padding: 5px; ">
             <span style="font-weight:bold; font-size: 20px; color: #000; padding-left: 10px">DESCRIPTION</span>
         </div>
 
@@ -115,7 +115,7 @@
 
         <hr>
         <div class="bold arial" style="text-align: center; float:right; width: 200px; padding: 5px; margin-right:30px">
-            <div style="padding: 10px 20px; width: 200px; background-color: lightcyan;">
+            <div style="padding: 10px 20px; width: 200px; background-color: #DCFCE7;">
                 <span  style="font-size: 16px;">{{ $pr->paid ? 'PAYMENT STATUS' : 'TOTAL DUE' }}</span>
             </div>
             <div  style="padding: 10px 20px; width: 200px; background-color: lightyellow;">
@@ -123,6 +123,7 @@
             </div>
         </div>
         <div class="clear"></div>
+        @include('partials.footer', ['is_print' => true])
     </div>
 </div>
 <script>

@@ -105,7 +105,7 @@
                         <label class="col-lg-3 col-form-label font-weight-semibold">Change Logo:</label>
                         <div class="col-lg-9">
                             <div class="mb-3">
-                                <img style="width: 100px" height="100px" src="{{ $s['logo'] }}" alt="">
+                                <img style="max-width: 160px; max-height: 80px; object-fit: contain;" src="{{ $s['logo'] ?: Qs::getDefaultLogo() }}" alt="Current Logo">
                             </div>
                             <input name="logo" accept="image/*" type="file" class="file-input" data-show-caption="false" data-show-upload="false" data-fouc>
                         </div>

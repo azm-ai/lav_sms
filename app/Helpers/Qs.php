@@ -26,7 +26,7 @@ class Qs
 
     public static function getAppCode()
     {
-        return self::getSetting('system_title') ?: 'CJ';
+        return self::getSetting('system_title') ?: 'ShaheenLMS';
     }
 
     public static function getDefaultUserImage()
@@ -273,9 +273,20 @@ class Qs
         return ++$old_yr[0].'-'.++$old_yr[1];
     }
 
+    public static function getDefaultLogo()
+    {
+        return asset('images/shaheen_lms_logo.svg');
+    }
+
+    public static function getLogo()
+    {
+        $logo = self::getSetting('logo');
+        return (!empty($logo)) ? $logo : self::getDefaultLogo();
+    }
+
     public static function getSystemName()
     {
-        return self::getSetting('system_name');
+        return self::getSetting('system_name') ?: config('app.name', 'ShaheenLMS');
     }
 
     public static function findMyChildren($parent_id)

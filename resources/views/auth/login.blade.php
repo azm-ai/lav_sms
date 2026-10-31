@@ -14,10 +14,10 @@
                     @csrf
                     <div class="card mb-0">
                         <div class="card-body">
-                            <div class="text-center mb-3">
-                                <i class="icon-people icon-2x text-warning-400 border-warning-400 border-3 rounded-round p-3 mb-3 mt-1"></i>
-                                <h5 class="mb-0">Login to your account</h5>
-                                <span class="d-block text-muted">Your credentials</span>
+                                                        <div class="text-center mb-3">
+                                <img src="{{ Qs::getLogo() }}" alt="{{ Qs::getSystemName() }}" style="height: 52px; width: auto; max-width: 230px;" class="mb-3 mt-1">
+                                <h5 class="mb-0 font-weight-bold" style="color: #166534;">Login to your account</h5>
+                                <span class="d-block text-muted">Enter your credentials</span>
                             </div>
 
                                 @if ($errors->any())

@@ -1,6 +1,6 @@
-## **Laravel School Management System** 
+## **ShaheenLMS - School Management System** 
 
-**LAVSMS** is developed for educational institutions like schools and colleges built on Laravel 8
+**ShaheenLMS** is developed for educational institutions like schools and colleges built on Laravel 8
 
 **SCREENSHOTS** 
 
@@ -111,7 +111,7 @@ Your Contributions & suggestions are welcomed. Please use Pull Request
 
 ### **Security Vulnerabilities**
 
-If you discover a security vulnerability within LAV_SMS, please send an e-mail to CJ Inspired via cjay.pub@gmail.com. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within ShaheenLMS, please send an e-mail to CJ Inspired via cjay.pub@gmail.com. All security vulnerabilities will be promptly addressed.
 
 ***Please Note*** that some sections of this project are in the work-in-progress stage and would be updated soon. These include:
 
