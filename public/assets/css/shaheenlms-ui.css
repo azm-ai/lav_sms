@@ -455,6 +455,13 @@ label,
   color: var(--text-2);
   font-weight: 500;
 }
+/* Narrow label columns broke words mid-letter ("Descripti / on"); hyphenate instead */
+.col-form-label {
+  overflow-wrap: normal;
+  word-break: normal;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
 .form-control,
 .select2-container--default .select2-selection--single,
 .select2-selection--single,
@@ -591,6 +598,24 @@ textarea.form-control {
    breaking names over two or three lines */
 .dataTable td {
   white-space: nowrap;
+}
+/* Cells holding an inline form (e.g. "Pay Now" amount + button) keep their
+   grid on one line without spilling into the next column */
+.dataTable td form .row {
+  flex-wrap: nowrap;
+  margin-left: 0;
+  margin-right: 0;
+  gap: var(--space-2);
+}
+.dataTable td form .row > [class*="col"] {
+  flex: 0 0 auto;
+  max-width: none;
+  width: auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+.dataTable td form .form-control {
+  width: 6.5rem;
 }
 .table td img.rounded-circle {
   border: 1px solid var(--line);
@@ -814,10 +839,50 @@ textarea.form-control {
 .modal-backdrop.show {
   opacity: 0.4;
 }
-/* SweetAlert confirm dialogs */
-.swal2-popup,
-.sweet-alert {
-  border-radius: var(--radius-lg) !important;
+/* SweetAlert dialogs (pop() and confirmDelete()); the stock confirm button
+   was white on light blue at 1.7:1 */
+.swal-modal {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+.swal-title {
+  color: var(--text);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+.swal-text {
+  color: var(--text-2);
+  text-align: center;
+}
+.swal-button {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+}
+.swal-button--confirm {
+  background-color: var(--brand-strong);
+  color: #FFFFFF;
+}
+.swal-button--confirm:not([disabled]):hover {
+  background-color: var(--brand-dark);
+}
+.swal-button--danger {
+  background-color: var(--danger);
+  color: #FFFFFF;
+}
+.swal-button--danger:not([disabled]):hover {
+  background-color: var(--danger-hover);
+}
+.swal-button--cancel {
+  background-color: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+.swal-button--cancel:not([disabled]):hover {
+  background-color: var(--surface-2);
+}
+.swal-button:focus {
+  box-shadow: var(--focus-ring);
 }
 
 /* ------------------------------------------------------------------ */
