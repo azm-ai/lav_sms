@@ -3,7 +3,7 @@
 @section('content')
 
     @if(Qs::userIsTeamSA())
-       <div class="row">
+       <div class="row slms-stats">
            <div class="col-sm-6 col-xl-3">
                <div class="card card-body bg-blue-400 has-bg-image">
                    <div class="media">
